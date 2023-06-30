@@ -1,0 +1,32 @@
+server:
+  port: 9527
+  servlet:
+    context-path: / # 设置当前项目的访问地址\
+
+spring:
+  datasource:
+    # 8.x    com.mysql.jdbc.cj.Driver
+    driver-class-name: com.mysql.jdbc.Driver
+    username: video
+    password: 12345678
+    url: jdbc:mysql://localhost:3306/video?useSSL=false
+
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
+
+
+mybatis:
+  type-aliases-package: com.gby.video.bean
+  mapper-locations: classpath:mappers/*.xml
+
+
+file:
+  upload_path: D:\Code\ldsx\upload\img
+  static_access_path: /file/
+
+qiniuyun:
+  access_key: hwjZY0K3PHVsKpQKSbYzHAFHGi6WqMFXb_Mg2hmD
+  secret_key: aDuHn_uTa69wAwUJx98kEdQvq_p6lOqphJl_AXEn
+  bucket: mybuf

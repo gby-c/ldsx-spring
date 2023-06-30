@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gby.video.mapper.VideoMapper">
+    <resultMap id="videoMap" type="video">
+        <id property="id" column="id"></id>
+        <result property="videoTitle" column="video_title"></result>
+        <result property="videoCover" column="video_cover"></result>
+        <result property="videoTypes" column="video_types"></result>
+        <result property="director" column="director"></result>
+        <result property="stars" column="stars"></result>
+        <result property="publishTime" column="publish_time"></result>
+        <result property="videoKind" column="video_kind"></result>
+        <result property="videoPath" column="video_path"></result>
+        <result property="videoContent" column="video_content"></result>
+        <result property="videoStatus" column="video_status"></result>
+        <result property="doubanScore" column="douban_score"></result>
+        <collection property="videoChildrensList"
+                    select="com.gby.video.mapper.VideoMapper.selectChildren"
+                    column="{videoId == id}"></collection>
+    </resultMap>
+
+    <select id="select" parameterType="video" resultMap="videoMap">
+        select
+        id,
+        video_title,
+        video_cover,
+        video_types,
+        director,
+        stars,
+        publish_time,
+        video_kind,
+        video_path,
+        video_content,
+        video_status,
+        douban_score
+        from uni_video
+        <where>
+            <if test="videoTitle!=null and videoTitle!=''">
+                video_title like concat('%',#{videoTitle},'%')
+            </if>
+            <if test="videoKind!=null">
+                and video_kind = #{videoKind}
+            </if>
+        </where>
+
+    </select>
+    <select id="selectChildren" resultType="videoChildrens">
+        select id,
+               video_id        as videoId,
+               video_path      as videoPath,
+               video_Anthology as videoAnthology
+        from uni_video_childrens
+        where video_id = #{videoId}
+    </select>
+
+    <delete id="del" parameterType="String">
+        delete
+        from uni_video
+        where id = #{id}
+    </delete>
+
+    <delete id="delChildrenByVideoId" parameterType="String">
+        delete
+        from uni_video_childrens
+        where video_id = #{videoId}
+    </delete>
+
+    <delete id="delChildren" parameterType="Integer">
+        delete
+        from uni_video_childrens
+        where id = #{id}
+    </delete>
+    <update id="updateVideo" parameterType="com.gby.video.bean.Video">
+        update
+            uni_video
+        set video_title   = #{videoTitle},
+            video_cover   = #{videoCover},
+            video_types   = #{videoTypes},
+            director      = #{director},
+            stars         = #{stars},
+            publish_time  = #{publishTime},
+            video_kind    = #{videoKind},
+            video_path    = #{videoPath},
+            video_content = #{videoContent},
+            video_status  = #{videoStatus},
+            douban_score  = #{doubanScore}
+        where id = #{id};
+    </update>
+    <insert id="insertVideo" useGeneratedKeys="true" keyProperty="id">
+        insert into uni_video (id,
+                               video_title,
+                               video_cover,
+                               video_types,
+                               director,
+                               stars,
+                               publish_time,
+                               video_kind,
+                               video_path,
+                               video_content,
+                               video_status,
+                               douban_score)
+        values (#{id},
+                #{videoTitle},
+                #{videoCover},
+                #{videoTypes},
+                #{director},
+                #{stars},
+                #{publishTime},
+                #{videoKind},
+                #{videoPath},
+                #{videoContent},
+                #{videoStatus},
+                #{doubanScore});
+    </insert>
+
+    <insert id="insertChildrens">
+        insert into uni_video_childrens(video_id, video_path, video_Anthology) values 
+        <foreach collection="list" separator="," item="child">
+            (#{child.videoId}, #{child.videoPath}, #{videoAnthology})
+        </foreach>
+    </insert>
+</mapper>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace为Mapper接口-->
+<mapper namespace="com.gby.video.mapper.UserMapper">
+    <!--  id对应namespace的函数  parameterType参数类型 resultType返回类型  -->
+    <select id="selectUserByName" parameterType="String" resultType="User">
+        select id,
+               user_name  as userName,
+               password,
+               user_pic   as userPic,
+               user_cover as userCover,
+               sex,
+               content,
+               age,
+               role,
+               openid,
+               activate
+        from uni_user
+        where user_name = #{userName};
+    </select>
+
+    <insert id="userInsert" useGeneratedKeys="true" keyProperty="id">
+        insert into uni_user(user_name, password, user_pic, user_cover, sex, content, age, openid, role, activate)
+        values (#{userName}, #{password}, #{userPic}, #{userCover}, #{sex}, #{content}, #{age}, #{openid}, #{role}, #{activate});
+    </insert>
+
+    <resultMap id="userMap" type="user">
+        <id property="id" column="id"></id>
+        <result property="userName" column="user_name"></result>
+        <result property="password" column="password"></result>
+        <result property="userPic" column="user_pic"></result>
+        <result property="userCover" column="user_cover"></result>
+        <result property="sex" column="sex"></result>
+        <result property="content" column="content"></result>
+        <result property="age" column="age"></result>
+        <result property="openid" column="openid"></result>
+        <result property="role" column="role"></result>
+        <result property="activate" column="activate"></result>
+    </resultMap>
+
+
+    <select id="select" parameterType="user" resultMap="userMap">
+        select
+        id,
+        user_name,
+        password,
+        user_pic,
+        user_cover,
+        sex,
+        content,
+        age,
+        openid,
+        role,
+        activate
+        from uni_user
+        <where>
+            <if test="userName!=null and userName!=''">
+                user_name like concat('%',#{userName},'%')
+            </if>
+            <if test="role!=null">
+                and role = #{role}
+            </if>
+        </where>
+    </select>
+
+    <update id="userUpdate" parameterType="user">
+        update
+            uni_user
+        set user_name  = #{userName},
+            password   = #{password},
+            user_pic   = #{userPic},
+            user_cover = #{userCover},
+            sex        = #{sex},
+            content    = #{content},
+            age        = #{age},
+            openid     = #{openid},
+            role       = #{role},
+            activate     = #{activate}
+        where id = #{id}
+    </update>
+
+    <update id="userBan" parameterType="user">
+        update
+            uni_user
+        set activate = 0
+        where id = #{id}
+    </update>
+
+    <update id="userAct" parameterType="user">
+        update
+            uni_user
+        set activate = 1
+        where id = #{id}
+    </update>
+</mapper>
