@@ -52,7 +52,6 @@ public class FileController {
         String fileName = file.getOriginalFilename();
         //                                         .XXX   .png
         String suffix = fileName.substring(fileName.lastIndexOf("."));
-//        System.out.println(fileName);
         Instant instant = Instant.now();
 
         String newName = instant.toEpochMilli() + suffix;

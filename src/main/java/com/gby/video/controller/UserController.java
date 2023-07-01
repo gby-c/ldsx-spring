@@ -22,8 +22,12 @@ public class UserController {
             return ResultVO.error("账号不存在");
         } else {
             if (userService.security(vo, user.getPassword())) {
-                vo.setPassword("");
-                return ResultVO.success("登陆成功").setData(vo);
+                if(vo.getActivate() == 1){
+                    vo.setPassword("");
+                    return ResultVO.success("登陆成功").setData(vo);
+                } else {
+                    return ResultVO.noPermission();
+                }
             } else {
                 return ResultVO.error("密码错误");
             }

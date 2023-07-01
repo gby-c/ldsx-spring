@@ -24,6 +24,14 @@ public class ResultVO {
         return new ResultVO(SYSTEM_ERROR, null, msg);
     }
 
+    public static ResultVO noPermission(String msg) {
+        return new ResultVO(NO_PERMISSIONS, null, msg);
+    }
+
+    public static ResultVO noPermission(){
+        return new ResultVO(NO_PERMISSIONS, null, "封禁账号无法登录");
+    }
+
     public ResultVO setData(Object data) {
         this.data = data;
         return this;

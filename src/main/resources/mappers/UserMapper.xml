@@ -7,15 +7,15 @@
     <!--  id对应namespace的函数  parameterType参数类型 resultType返回类型  -->
     <select id="selectUserByName" parameterType="String" resultType="User">
         select id,
-               user_name  as userName,
+               user_name as userName,
                password,
-               user_pic   as userPic,
+               user_pic as userPic,
                user_cover as userCover,
                sex,
                content,
                age,
-               role,
                openid,
+               role,
                activate
         from uni_user
         where user_name = #{userName};
